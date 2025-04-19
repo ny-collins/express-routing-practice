@@ -61,6 +61,12 @@ app.get('/api/users/:id', (req, res) => {
   }
 });
 
+// Route parameters
+app.get('/users/:id', (req, res) => {
+    const { id } = req.params;
+    res.send(`You are viewing the profile of user with ID: ${id}`);
+  });
+
 // 404 Not Found Handler
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
