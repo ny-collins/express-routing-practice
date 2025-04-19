@@ -2,7 +2,7 @@
 
 A simple Express.js application that demonstrates the basics of routing, serving static files, handling query parameters, and building a basic API.
 
----
+
 
 ## 🚀 Features
 
@@ -11,7 +11,7 @@ A simple Express.js application that demonstrates the basics of routing, serving
 - Provides a basic JSON API with user data
 - Custom 404 error page for undefined routes
 
----
+
 
 ## 🏗 Project Structure
 
