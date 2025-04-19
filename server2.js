@@ -44,6 +44,12 @@ app.get('/search', (req, res) => {
   res.send(`<h1>${message}</h1>`);
 });
 
+// Route parameters
+app.get('/users/:id', (req, res) => {
+    const { id } = req.params;
+    res.send(`You are viewing the profile of user with ID: ${id}`);
+  });
+
 // API - Get all users
 app.get('/api/users', (req, res) => {
   res.json(users);
@@ -60,12 +66,6 @@ app.get('/api/users/:id', (req, res) => {
     res.status(404).json({ error: 'User not found' });
   }
 });
-
-// Route parameters
-app.get('/users/:id', (req, res) => {
-    const { id } = req.params;
-    res.send(`You are viewing the profile of user with ID: ${id}`);
-  });
 
 // 404 Not Found Handler
 app.use((req, res) => {
