@@ -1,75 +1,62 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const port = 3001;
+const PORT = 3000;
 
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Sample user data
+const users = [
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' },
+  { id: 3, name: 'Charlie' }
+];
+
+// Homepage
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'about.html'));
-    }
-);
-
-app.get('/contact', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'contact.html'));
-    }
-);
-
+// Search route (with basic param logic)
 app.get('/search', (req, res) => {
-    const term = req.query.term;
-    const level = req.query.level;
-    res.send(`You searched for ${term} at the level ${level}.`);
-    }
-);
+  const { term, level, category, difficulty } = req.query;
+  let message = '';
 
-app.get('/search', (req, res) => {
-    const { category, difficulty } = req.query;
-    res.send(`You searched in category : ${category} with difficulty: ${difficulty}.`);
-    }
-);
+  if (term && level) {
+    message = `Searching for "${term}" at level "${level}".`;
+  } else if (category && difficulty) {
+    message = `Filtering by category "${category}" and difficulty "${difficulty}".`;
+  } else {
+    message = 'Please provide valid query parameters.';
+  }
 
+  res.send(`<h1>${message}</h1>`);
+});
+
+// API - Get all users
 app.get('/api/users', (req, res) => {
-    const users = [
-        { id: 1, name: 'John Doe', email: 'john@example.com' },
-        { id: 2, name: 'Jane Doe', email: 'jane@example.com' },
-        { id: 3, name: 'Jim Doe', email: 'jim@example.com'}
-    ];
-    res.json(users);
-    }
-);
+  res.json(users);
+});
 
+// API - Get user by ID
 app.get('/api/users/:id', (req, res) => {
-    const users = [
-        { id: 1, name: 'John Doe', email: 'john@example.com' },
-        { id: 2, name: 'Jane Doe', email: 'jane@example.com' },
-        { id: 3, name: 'Jim Doe', email: 'jim@example.com'}
-    ];
-    const userID = parseInt(req.params.id);
-    const user = users.find(user => user.id === userID);    
-    
-    if (!user) {
-        return res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
-    }
+  const userId = parseInt(req.params.id);
+  const user = users.find(u => u.id === userId);
+
+  if (user) {
     res.json(user);
-    }
-);
+  } else {
+    res.status(404).json({ error: 'User not found' });
+  }
+});
 
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
-    }
-);
-
+// 404 Not Found Handler
 app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
-    }
-);
+  res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+});
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-    }
-);
-
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server is running at http://localhost:${PORT}`);
+});
